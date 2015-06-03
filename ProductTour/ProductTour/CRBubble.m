@@ -21,8 +21,11 @@
 
 #pragma mark - Constructor
 
+- (id) initWithAttachedView:(UIView *)view title:(NSString *)title description:(NSString *)buubleDescription arrowPosition:(CRArrowPosition)arrowPosition andColor:(UIColor *)color{
+    return [self initWithAttachedView:view title:title description:buubleDescription arrowPosition:arrowPosition andColor:color andTitleColor:nil];
+}
 
--(id)initWithAttachedView:(UIView*)view title:(NSString*)title description:(NSString*)bubbleDescription arrowPosition:(CRArrowPosition)arrowPosition andColor:(UIColor*)color
+-(id)initWithAttachedView:(UIView*)view title:(NSString*)title description:(NSString*)bubbleDescription arrowPosition:(CRArrowPosition)arrowPosition andColor:(UIColor*)color andTitleColor:(UIColor *)titleColor
 {
     self = [super init];
     if(self)
@@ -31,6 +34,7 @@
             self.color=color;
         else
             self.color=COLOR_GLUE_BLUE;
+        self.titleColor = titleColor;
         self.attachedView = view;
         self.title = title;
         self.bubbleDescription = bubbleDescription;
@@ -38,9 +42,9 @@
         [self setBackgroundColor:[UIColor clearColor]];
         
         if(!fontName) {
-            fontName= [[UIFont systemFontOfSize:12] fontName]; 
+            fontName= [[UIFont systemFontOfSize:12] fontName];
         }
-
+        
         float actualXPosition = [self offsets].width+CR_PADDING;
         float actualYPosition = [self offsets].height+CR_PADDING;
         float actualWidth =self.frame.size.width;
@@ -48,7 +52,7 @@
         
         if (self.title && ![self.title isEqualToString:@""]) {
             titleLabel = [[UILabel alloc] initWithFrame:CGRectMake(actualXPosition, actualYPosition, actualWidth, actualHeight)];
-            [titleLabel setTextColor:[UIColor blackColor]];
+            [titleLabel setTextColor:self.titleColor? self.titleColor : [UIColor blackColor]];
             [titleLabel setAlpha:0.6];
             [titleLabel setFont:[UIFont fontWithName:fontName size:CR_TITLE_FONT_SIZE]];
             [titleLabel setText:title];
@@ -70,7 +74,7 @@
             actualHeight =CR_DESCRIPTION_FONT_SIZE;
             
             UILabel *descriptionLabel = [[UILabel alloc] initWithFrame:CGRectMake(actualXPosition, actualYPosition, actualWidth, actualHeight+CR_ARROW_SPACE)];
-            [descriptionLabel setTextColor:COLOR_DARK_GRAY];
+            [descriptionLabel setTextColor:self.titleColor? self.titleColor : COLOR_DARK_GRAY];
             [descriptionLabel setFont:[UIFont systemFontOfSize:CR_DESCRIPTION_FONT_SIZE]];
             [descriptionLabel setText:descriptionLine];
             [descriptionLabel setBackgroundColor:[UIColor clearColor]];
