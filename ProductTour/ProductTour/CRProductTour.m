@@ -8,7 +8,8 @@
 
 #import "CRProductTour.h"
 #define ANIMATION_TRANSLATION 30
-#define ANIMATION_DURATION 0.25
+#define ANIMATION_DURATION 0.5
+#define ANIMATION_DELAY 0.5
 
 @implementation CRProductTour
 static BOOL tourVisible=YES;
@@ -24,7 +25,7 @@ static NSMutableArray *arrayOfAllocatedTours;
         [self setBackgroundColor:[UIColor clearColor]];
         [self setUserInteractionEnabled:NO];
         if(arrayOfAllocatedTours==nil)
-        arrayOfAllocatedTours = [[NSMutableArray alloc]init];
+            arrayOfAllocatedTours = [[NSMutableArray alloc]init];
         [arrayOfAllocatedTours addObject:self];
     }
     
@@ -110,11 +111,20 @@ static NSMutableArray *arrayOfAllocatedTours;
 
 -(void)makeAppearAnimation:(CRBubble*)bubble;
 {
-    [UIView beginAnimations:nil context:NULL];
-    [UIView setAnimationDuration:ANIMATION_DURATION];
-    bubble.transform=CGAffineTransformIdentity;
-    [bubble setAlpha:1.0];
-    [UIView commitAnimations];
+    [UIView animateKeyframesWithDuration:ANIMATION_DURATION
+                                   delay:ANIMATION_DELAY
+                                 options:UIViewKeyframeAnimationOptionCalculationModePaced
+                              animations:^{
+                                  [UIView addKeyframeWithRelativeStartTime:0 relativeDuration:.75 animations:^{
+                                      bubble.transform=CGAffineTransformMakeScale(1.3, 1.3);
+                                      [bubble setAlpha:1.0];
+                                  }];
+                                  [UIView addKeyframeWithRelativeStartTime:.75 relativeDuration:.25 animations:^{
+                                      bubble.transform=CGAffineTransformIdentity;
+                                  }];
+                              }
+                              completion:nil];
+    
 }
 
 -(void) refreshBubblesVisibility
